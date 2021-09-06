@@ -1,11 +1,8 @@
 import database.DBConnection;
 import model.Email;
 import model.EmailSender;
-import org.graalvm.compiler.virtual.phases.ea.ReadEliminationBlockState;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 

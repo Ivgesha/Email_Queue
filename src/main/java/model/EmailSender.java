@@ -33,17 +33,26 @@ public class EmailSender implements Runnable{
          subject = email.getSubject();
          message = email.getMessage();
          status = email.getStatus();
+        System.out.println(email.toString());
     }
 
     @Override
     public void run() {
+        boolean isSent = false;
+        int updateStatus;
         try {
+//            Properties prop = new Properties();
+//            prop.put("mail.smtp.auth", true);
+//            prop.put("mail.smtp.starttls.enable", "true");
+//            prop.put("mail.smtp.host", "smtp.mailtrap.io");
+//            prop.put("mail.smtp.port", "25");
+//            prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
+
             Properties prop = new Properties();
-            prop.put("mail.smtp.auth", true);
+            prop.put("mail.smtp.auth", "true");
             prop.put("mail.smtp.starttls.enable", "true");
-            prop.put("mail.smtp.host", "smtp.mailtrap.io");
-            prop.put("mail.smtp.port", "25");
-            prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
+            prop.put("mail.smtp.host", "smtp.gmail.com");
+            prop.put("mail.smtp.port", "587");
 
 
             Session session = Session.getInstance(prop, new Authenticator() {
@@ -56,8 +65,7 @@ public class EmailSender implements Runnable{
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(myAccountEmail));
-            message.setRecipients(
-                    Message.RecipientType.TO, InternetAddress.parse(receiver));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(receiver));
             message.setSubject(subject);
             String msg = this.message;
             MimeBodyPart mimeBodyPart = new MimeBodyPart();
@@ -66,21 +74,35 @@ public class EmailSender implements Runnable{
             multipart.addBodyPart(mimeBodyPart);
             message.setContent(multipart);
             Transport.send(message);
+            isSent = true;
             System.out.println(" ***** Email sent successfully *****");
-
-
-            // update email row to finised.
-            String updateQuery = "update emails set STATUS = 2 where email_id = ?";
-            PreparedStatement preparedStatement = db.getConnection().prepareStatement(updateQuery);
-            preparedStatement.setInt(1,emailId);
-            preparedStatement.execute();
-
 
             // the logic of the send email.
             // if done successfully, change status to 2 (sent successfully)
         }catch (Exception e){
+            isSent = false;
             System.out.println(e);
         }
+
+
+
+        try {
+            if(isSent == true){
+                updateStatus = 2;       // successfully sent.
+            }else{
+                updateStatus = -1;       // an error accrued
+            }
+            // update email row to finised.
+            String updateQuery = "update emails set STATUS = ? where email_id = ?";
+            PreparedStatement preparedStatement = db.getConnection().prepareStatement(updateQuery);
+            preparedStatement.setInt(1, updateStatus);
+            preparedStatement.setInt(2, emailId);
+            preparedStatement.execute();
+        }catch (Exception e){
+
+        }
+
+
     }
 
 

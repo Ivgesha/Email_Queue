@@ -61,4 +61,17 @@ public class Email {
     public void setStatus(int status) {
         this.status = status;
     }
+
+
+    @Override
+    public String toString() {
+        return "Email{" +
+                "emailId=" + emailId +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", subject='" + subject + '\'' +
+                ", message='" + message + '\'' +
+                ", status=" + status +
+                '}';
+    }
 }
