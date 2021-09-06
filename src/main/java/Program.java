@@ -15,9 +15,6 @@ public class Program {
         Connection conn = db.getConnection();
 
         ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(THREADS);    // set x threads.
-//        executor.submit(new EmailSender(1));     // and send the result set? or id?
-//        executor.submit(new EmailSender(2));     // and send the result set? or id?
-
 
         // allways checking the table for new emails.
         while (true) {

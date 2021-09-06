@@ -84,8 +84,6 @@ public class EmailSender implements Runnable{
             System.out.println(e);
         }
 
-
-
         try {
             if(isSent == true){
                 updateStatus = 2;       // successfully sent.
@@ -99,11 +97,7 @@ public class EmailSender implements Runnable{
             preparedStatement.setInt(2, emailId);
             preparedStatement.execute();
         }catch (Exception e){
-
+            System.out.println("Could not update status.");
         }
-
-
     }
-
-
 }
